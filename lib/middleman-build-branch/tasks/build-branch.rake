@@ -63,11 +63,12 @@ end
 desc "Build and publish to Github Pages"
 task :publish => [:not_dirty, :prepare_git_remote_in_build_dir, :sync, :build] do
   message = nil
-  suffix = ENV["COMMIT_MESSAGE_SUFFIX"]
+  suffix  = ENV["COMMIT_MESSAGE_SUFFIX"]
+  skip    = ENV["SKIP_CI_MESSAGE"] || "[skip ci]"
 
   cd PROJECT_ROOT do
     head = `git log --pretty="%h" -n1`.strip
-    message = ["Site updated to #{head}", suffix].compact.join("\n\n")
+    message = ["Site updated to #{head} #{skip}".strip, suffix].compact.join("\n\n")
   end
 
   cd BUILD_DIR do
